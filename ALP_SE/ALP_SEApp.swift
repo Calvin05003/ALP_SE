@@ -11,8 +11,11 @@ import SwiftData
 @main
 struct ALP_SEApp: App {
     @StateObject private var session = SessionController()
+    @StateObject private var userController: UserController
 
-    var sharedModelContainer: ModelContainer = {
+    var sharedModelContainer: ModelContainer
+
+    init() {
         let schema = Schema([
             UserModel.self,
             TransactionModel.self,
@@ -21,14 +24,18 @@ struct ALP_SEApp: App {
             CategoryModel.self
         ])
         let config = ModelConfiguration(schema: schema)
-        return try! ModelContainer(for: schema, configurations: [config])
-    }()
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        sharedModelContainer = container
+        // Initialize UserController with the container's main context
+        _userController = StateObject(wrappedValue: UserController(context: container.mainContext))
+    }
 
     var body: some Scene {
         WindowGroup {
             StartView()
                 .environmentObject(session)
+                .environmentObject(userController)   // inject UserController here
+                .modelContainer(sharedModelContainer)
         }
-        .modelContainer(sharedModelContainer)
     }
 }

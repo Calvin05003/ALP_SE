@@ -44,14 +44,14 @@ struct HomeView: View {
                         }
                     } else {
                         HStack {
-                            Text("Rp \(user.balance, specifier: "%.2f")")
+                            Text("Rp \(user.balance ?? 0.0, specifier: "%.2f")")
                                 .font(.title2)
                                 .fontWeight(.medium)
 
                             Spacer()
 
                             Button("Edit") {
-                                newBalanceText = String(user.balance)
+                                newBalanceText = String(user.balance ?? 0.0)
                                 isEditingBalance = true
                             }
                             .font(.footnote)

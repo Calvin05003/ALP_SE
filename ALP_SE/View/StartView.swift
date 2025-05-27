@@ -5,12 +5,12 @@
 //  Created by Calvin Laiman on 26/05/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct StartView: View {
     @EnvironmentObject var session: SessionController
-    
+
     var body: some View {
         NavigationStack {
             if session.isLoggedIn {
@@ -23,15 +23,20 @@ struct StartView: View {
 }
 
 #Preview {
-    let session = SessionController()
-    
-    return StartView()
-        .environmentObject(session)
-        .modelContainer(for: [
+    let container = try! ModelContainer(
+        for:
             UserModel.self,
-            TransactionModel.self,
-            CategoryModel.self,
-            SavingGoalModel.self,
-            SavingEntryModel.self
-        ], inMemory: true)
+        TransactionModel.self,
+        CategoryModel.self,
+        SavingGoalModel.self,
+        SavingEntryModel.self
+    )
+
+    let session = SessionController()
+    let userController = UserController(context: container.mainContext)
+
+    StartView()
+        .environmentObject(session)
+        .environmentObject(userController)
+        .modelContainer(container)
 }

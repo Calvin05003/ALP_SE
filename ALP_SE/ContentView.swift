@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    //buat navbar disini
     var body: some View {
         VStack {
             Image(systemName: "globe")

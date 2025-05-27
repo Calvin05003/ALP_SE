@@ -2,7 +2,7 @@
 //  LoginView.swift
 //  ALP_SE
 //
-//  Created by Calvin Laiman on 26/05/25.
+//  Created by Christianto Elvern Haryanto on 27/05/25.
 //
 
 import SwiftUI
@@ -10,51 +10,78 @@ import SwiftData
 
 struct LoginView: View {
     @Environment(\.modelContext) private var context
-    @EnvironmentObject var session: SessionController
     @State private var username = ""
     @State private var password = ""
-    @State private var alertMessage = ""
     @State private var showAlert = false
+    @State private var alertMessage = ""
+
+    @EnvironmentObject var sessionController: SessionController
+    @EnvironmentObject var userController: UserController
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Login").font(.largeTitle).bold()
+        NavigationView {
+            VStack(spacing: 20) {
+                Text("Login")
+                    .font(.largeTitle)
+                    .bold()
 
-            TextField("Username", text: $username)
-                .textFieldStyle(.roundedBorder)
+                TextField("Username", text: $username)
+                    .textFieldStyle(.roundedBorder)
+                    .autocapitalization(.none)
 
-            SecureField("Password", text: $password)
-                .textFieldStyle(.roundedBorder)
+                SecureField("Password", text: $password)
+                    .textFieldStyle(.roundedBorder)
 
-            Button("Login") {
-                Task {
-                    let controller = UserController(context: context)
+                Button("Login") {
+                    guard !username.isEmpty && !password.isEmpty else {
+                        alertMessage = "Please enter both username and password."
+                        showAlert = true
+                        return
+                    }
+
                     do {
-                        if let user = try controller.login(username: username, password: password) {
-                            session.login(user: user)
+                        if let user = try userController.login(username: username, password: password) {
+                            sessionController.login(user: user)
+                            alertMessage = "Login successful! with username: \(user.username)"
+                            
                         } else {
-                            alertMessage = "Invalid credentials."
-                            showAlert = true
+                            alertMessage = "Login failed: Invalid username or password"
                         }
                     } catch {
-                        alertMessage = "Login failed."
-                        showAlert = true
+                        alertMessage = "Login failed: \(error.localizedDescription)"
                     }
+                    showAlert = true
                 }
-            }
-            .buttonStyle(.borderedProminent)
+                .buttonStyle(.borderedProminent)
+                .alert(alertMessage, isPresented: $showAlert) {
+                    Button("OK", role: .cancel) { }
+                }
 
-            NavigationLink("Don't have an account? Register", destination: RegisterView())
+                HStack {
+                    Text("Don't have an account?")
+                    NavigationLink("Register") {
+                        RegisterView()
+                    }
+                    .foregroundColor(.blue)
+                    .bold()
+                }
                 .font(.footnote)
+                .padding(.top, 10)
+
+                Spacer()
+            }
+            .padding()
         }
-        .padding()
-        .alert(alertMessage, isPresented: $showAlert) {}
     }
 }
 
-
-
 #Preview {
+    let container = try! ModelContainer(for: UserModel.self)
+    let userController = UserController(context: container.mainContext)
+    let session = SessionController()
+
     LoginView()
-        .modelContainer(for: UserModel.self, inMemory: true)
+        .environmentObject(userController)
+        .environmentObject(session)
+        .modelContainer(container)
 }

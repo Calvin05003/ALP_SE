@@ -10,10 +10,10 @@ import SwiftData
 
 @Model
 class UserModel {
-    @Attribute(.unique) var userId: Int
+    @Attribute(.unique) var userId: Int? = nil
     var username: String
     var password: String
-    var balance: Double = 0.0
+    var balance: Double? = 0.0
     @Relationship var transactions: [TransactionModel] = []
     @Relationship var savingGoals: [SavingGoalModel] = []
 
