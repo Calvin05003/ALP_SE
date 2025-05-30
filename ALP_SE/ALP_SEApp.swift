@@ -1,10 +1,3 @@
-//
-//  ALP_SEApp.swift
-//  ALP_SE
-//
-//  Created by Calvin Laiman on 26/05/25.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -12,6 +5,7 @@ import SwiftData
 struct ALP_SEApp: App {
     @StateObject private var session = SessionController()
     @StateObject private var userController: UserController
+    @StateObject private var goal: SavingGoalController
 
     var sharedModelContainer: ModelContainer
 
@@ -28,13 +22,16 @@ struct ALP_SEApp: App {
         sharedModelContainer = container
         // Initialize UserController with the container's main context
         _userController = StateObject(wrappedValue: UserController(context: container.mainContext))
+        // Initialize SavingGoalController with the container's main context
+        _goal = StateObject(wrappedValue: SavingGoalController(context: container.mainContext))
     }
 
     var body: some Scene {
         WindowGroup {
             StartView()
                 .environmentObject(session)
-                .environmentObject(userController)   // inject UserController here
+                .environmentObject(userController)   // inject UserController
+                .environmentObject(goal)             // inject SavingGoalController
                 .modelContainer(sharedModelContainer)
         }
     }

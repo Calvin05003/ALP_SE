@@ -13,8 +13,8 @@ struct HomeView: View {
     @Environment(\.modelContext) private var context
     @State private var isEditingBalance = false
     @State private var newBalanceText: String = ""
+    @State private var isShowingSavingGoals = false // Sheet control
 
-    // Ambil semua transaksi, filter di body
     @Query(sort: \TransactionModel.date, order: .reverse) private var allTransactions: [TransactionModel]
 
     var body: some View {
@@ -59,6 +59,18 @@ struct HomeView: View {
                             }
                             .font(.footnote)
                         }
+                    }
+
+                    // New: Sheet trigger button
+                    Button {
+                        isShowingSavingGoals = true
+                    } label: {
+                        Text("🏆 View Saving Goals")
+                            .fontWeight(.medium)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green.opacity(0.1))
+                            .cornerRadius(10)
                     }
                 }
                 .padding()
@@ -129,6 +141,9 @@ struct HomeView: View {
                 }
             }
             .padding()
+            .sheet(isPresented: $isShowingSavingGoals) {
+                SavingGoalsView()
+            }
         }
     }
 }
