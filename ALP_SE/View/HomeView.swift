@@ -14,6 +14,9 @@ struct HomeView: View {
     @State private var isEditingBalance = false
     @State private var newBalanceText: String = ""
 
+    // Ambil semua transaksi, filter di body
+    @Query(sort: \TransactionModel.date, order: .reverse) private var allTransactions: [TransactionModel]
+
     var body: some View {
         if let user = session.currentUser {
             VStack(spacing: 30) {
@@ -63,6 +66,56 @@ struct HomeView: View {
                 .cornerRadius(12)
                 .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
 
+                NavigationLink {
+                    AddTransactionView()
+                        .environmentObject(TransactionController(context: context))
+                } label: {
+                    Text("➕ Add Transaction")
+                        .fontWeight(.medium)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(10)
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Recent Transactions")
+                        .font(.headline)
+
+                    let userTransactions = allTransactions.filter { $0.userModel.userId == user.userId }
+
+                    if userTransactions.isEmpty {
+                        Text("No transactions found.")
+                            .foregroundColor(.gray)
+                    } else {
+                        ForEach(userTransactions.prefix(5)) { transaction in
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Text(transaction.category?.name ?? "Unknown")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+
+                                    Spacer()
+
+                                    Text("Rp \(transaction.amount, specifier: "%.2f")")
+                                        .font(.subheadline)
+                                }
+
+                                Text(transaction.notes)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+
+                                Text(transaction.date, style: .date)
+                                    .font(.caption2)
+                                    .foregroundColor(.gray)
+                            }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(8)
+                        }
+                    }
+                }
+
                 Spacer()
 
                 Button(action: {
@@ -80,13 +133,16 @@ struct HomeView: View {
     }
 }
 
-
 #Preview {
-    let dummyUser = UserModel(userId: 1, username: "steven", password: "123", balance: 0.0)
+    let dummyUser = UserModel(
+        userId: 1,
+        username: "steven",
+        password: "123",
+        balance: 0.0
+    )
     let dummySession = SessionController()
     dummySession.login(user: dummyUser)
     return HomeView()
         .environmentObject(dummySession)
-        .modelContainer(for: UserModel.self, inMemory: true)
+        .modelContainer(for: [UserModel.self, TransactionModel.self, CategoryModel.self], inMemory: true)
 }
-

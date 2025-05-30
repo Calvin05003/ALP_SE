@@ -25,7 +25,7 @@ struct StartView: View {
 #Preview {
     let container = try! ModelContainer(
         for:
-            UserModel.self,
+        UserModel.self,
         TransactionModel.self,
         CategoryModel.self,
         SavingGoalModel.self,
