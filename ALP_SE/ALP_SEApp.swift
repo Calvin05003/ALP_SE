@@ -6,6 +6,7 @@ struct ALP_SEApp: App {
     @StateObject private var session = SessionController()
     @StateObject private var userController: UserController
     @StateObject private var goal: SavingGoalController
+    @StateObject private var entry: SavingEntryController
 
     var sharedModelContainer: ModelContainer
 
@@ -24,6 +25,7 @@ struct ALP_SEApp: App {
         _userController = StateObject(wrappedValue: UserController(context: container.mainContext))
         // Initialize SavingGoalController with the container's main context
         _goal = StateObject(wrappedValue: SavingGoalController(context: container.mainContext))
+        _entry = StateObject(wrappedValue: SavingEntryController(context: container.mainContext))
     }
 
     var body: some Scene {
@@ -32,6 +34,7 @@ struct ALP_SEApp: App {
                 .environmentObject(session)
                 .environmentObject(userController)   // inject UserController
                 .environmentObject(goal)             // inject SavingGoalController
+                .environmentObject(entry)
                 .modelContainer(sharedModelContainer)
         }
     }

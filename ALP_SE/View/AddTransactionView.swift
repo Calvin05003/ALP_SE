@@ -33,16 +33,16 @@ struct AddTransactionView: View {
                 }
             }
             .pickerStyle(.menu)
-
+            
             TextField("Amount", text: $amountText)
                 .keyboardType(.decimalPad)
                 .textFieldStyle(.roundedBorder)
-
+            
             DatePicker("Date", selection: $date, displayedComponents: .date)
-
+            
             TextField("Notes", text: $notes)
                 .textFieldStyle(.roundedBorder)
-
+            
             Button("Submit") {
                 submitTransaction()
             }

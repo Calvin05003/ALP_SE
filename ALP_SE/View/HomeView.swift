@@ -4,19 +4,15 @@
 //
 //  Created by Calvin Laiman on 26/05/25.
 //
-
 import SwiftUI
 import SwiftData
-
 struct HomeView: View {
     @EnvironmentObject var session: SessionController
     @Environment(\.modelContext) private var context
-    @State private var isEditingBalance = false
+    @State private var isAddingBalance = false
     @State private var newBalanceText: String = ""
     @State private var isShowingSavingGoals = false // Sheet control
-
     @Query(sort: \TransactionModel.date, order: .reverse) private var allTransactions: [TransactionModel]
-
     var body: some View {
         if let user = session.currentUser {
             VStack(spacing: 30) {
@@ -24,43 +20,41 @@ struct HomeView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity, alignment: .leading)
-
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Your Balance")
                         .font(.headline)
                         .foregroundColor(.gray)
-
-                    if isEditingBalance {
+                    if isAddingBalance {
                         HStack {
-                            TextField("Enter new balance", text: $newBalanceText)
+                            TextField("Enter amount to add", text: $newBalanceText)
                                 .keyboardType(.decimalPad)
                                 .textFieldStyle(.roundedBorder)
 
-                            Button("Save") {
-                                if let newBalance = Double(newBalanceText) {
-                                    user.balance = newBalance
+                            Button("Add") {
+                                if let additionalAmount = Double(newBalanceText) {
+                                    user.balance! += additionalAmount // <- Add instead of set
                                     try? context.save()
-                                    isEditingBalance = false
+                                    isAddingBalance = false
+                                    newBalanceText = "" // optional: clear text field after adding
                                 }
                             }
                             .buttonStyle(.borderedProminent)
                         }
+                    
+
                     } else {
                         HStack {
                             Text("Rp \(user.balance ?? 0.0, specifier: "%.2f")")
                                 .font(.title2)
                                 .fontWeight(.medium)
-
                             Spacer()
-
-                            Button("Edit") {
+                            Button("Add Balance") {
                                 newBalanceText = String(user.balance ?? 0.0)
-                                isEditingBalance = true
+                                isAddingBalance = true
                             }
                             .font(.footnote)
                         }
                     }
-
                     // New: Sheet trigger button
                     Button {
                         isShowingSavingGoals = true
@@ -77,7 +71,6 @@ struct HomeView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(12)
                 .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-
                 NavigationLink {
                     AddTransactionView()
                         .environmentObject(TransactionController(context: context))
@@ -89,13 +82,10 @@ struct HomeView: View {
                         .background(Color.blue.opacity(0.1))
                         .cornerRadius(10)
                 }
-
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Recent Transactions")
                         .font(.headline)
-
                     let userTransactions = allTransactions.filter { $0.userModel.userId == user.userId }
-
                     if userTransactions.isEmpty {
                         Text("No transactions found.")
                             .foregroundColor(.gray)
@@ -106,17 +96,13 @@ struct HomeView: View {
                                     Text(transaction.category?.name ?? "Unknown")
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
-
                                     Spacer()
-
                                     Text("Rp \(transaction.amount, specifier: "%.2f")")
                                         .font(.subheadline)
                                 }
-
                                 Text(transaction.notes)
                                     .font(.caption)
                                     .foregroundColor(.gray)
-
                                 Text(transaction.date, style: .date)
                                     .font(.caption2)
                                     .foregroundColor(.gray)
@@ -127,9 +113,7 @@ struct HomeView: View {
                         }
                     }
                 }
-
                 Spacer()
-
                 Button(action: {
                     session.logout()
                 }) {
@@ -147,7 +131,6 @@ struct HomeView: View {
         }
     }
 }
-
 #Preview {
     let dummyUser = UserModel(
         userId: 1,

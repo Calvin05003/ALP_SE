@@ -18,12 +18,20 @@ class SavingGoalModel {
     @Relationship var userModel: UserModel
     @Relationship var entries: [SavingEntryModel] = []
 
-    init(savingGoalId: Int, title: String, target: Double, currentAmount: Double, dueDate: Date, userModel: UserModel) {
+    init(
+        savingGoalId: Int, title: String, target: Double, currentAmount: Double,
+        dueDate: Date, userModel: UserModel
+    ) {
         self.savingGoalId = savingGoalId
         self.title = title
         self.target = target
         self.currentAmount = currentAmount
         self.dueDate = dueDate
         self.userModel = userModel
+    }
+
+    @Transient
+    var isCompleted: Bool {
+        return currentAmount >= target
     }
 }
