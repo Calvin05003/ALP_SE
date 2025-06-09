@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct StartView: View {
-    @EnvironmentObject var session: SessionController
+    @EnvironmentObject var session: SessionViewModel
 
     var body: some View {
         NavigationStack {
@@ -32,11 +32,11 @@ struct StartView: View {
         SavingEntryModel.self
     )
 
-    let session = SessionController()
-    let userController = UserController(context: container.mainContext)
+    let session = SessionViewModel()
+    let userViewModel = UserViewModel(context: container.mainContext)
 
     StartView()
         .environmentObject(session)
-        .environmentObject(userController)
+        .environmentObject(userViewModel)
         .modelContainer(container)
 }

@@ -3,10 +3,10 @@ import SwiftData
 
 @main
 struct ALP_SEApp: App {
-    @StateObject private var session = SessionController()
-    @StateObject private var userController: UserController
-    @StateObject private var goal: SavingGoalController
-    @StateObject private var entry: SavingEntryController
+    @StateObject private var session = SessionViewModel()
+    @StateObject private var userViewModel: UserViewModel
+    @StateObject private var goal: SavingGoalViewModel
+    @StateObject private var entry: SavingEntryViewModel
 
     var sharedModelContainer: ModelContainer
 
@@ -22,17 +22,17 @@ struct ALP_SEApp: App {
         let container = try! ModelContainer(for: schema, configurations: [config])
         sharedModelContainer = container
         // Initialize UserController with the container's main context
-        _userController = StateObject(wrappedValue: UserController(context: container.mainContext))
+        _userViewModel = StateObject(wrappedValue: UserViewModel(context: container.mainContext))
         // Initialize SavingGoalController with the container's main context
-        _goal = StateObject(wrappedValue: SavingGoalController(context: container.mainContext))
-        _entry = StateObject(wrappedValue: SavingEntryController(context: container.mainContext))
+        _goal = StateObject(wrappedValue: SavingGoalViewModel(context: container.mainContext))
+        _entry = StateObject(wrappedValue: SavingEntryViewModel(context: container.mainContext))
     }
 
     var body: some Scene {
         WindowGroup {
             StartView()
                 .environmentObject(session)
-                .environmentObject(userController)   // inject UserController
+                .environmentObject(userViewModel)   // inject UserController
                 .environmentObject(goal)             // inject SavingGoalController
                 .environmentObject(entry)
                 .modelContainer(sharedModelContainer)

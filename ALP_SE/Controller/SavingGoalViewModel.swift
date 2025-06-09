@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @MainActor
-class SavingGoalController: ObservableObject {
+class SavingGoalViewModel: ObservableObject {
     private var context: ModelContext
     
     init(context: ModelContext) {

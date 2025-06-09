@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @MainActor
-class SessionController: ObservableObject {
+class SessionViewModel: ObservableObject {
     @Published var currentUser: UserModel? = nil
     @Published var isLoggedIn: Bool = false
 

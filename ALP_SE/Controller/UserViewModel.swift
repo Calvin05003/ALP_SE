@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-class UserController: ObservableObject {
+class UserViewModel: ObservableObject {
     let context: ModelContext
     
     init(context: ModelContext) {

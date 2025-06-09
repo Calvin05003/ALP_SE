@@ -15,8 +15,8 @@ struct LoginView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
 
-    @EnvironmentObject var sessionController: SessionController
-    @EnvironmentObject var userController: UserController
+    @EnvironmentObject var sessionController: SessionViewModel
+    @EnvironmentObject var userViewModel: UserViewModel
 
     var body: some View {
         NavigationView {
@@ -40,7 +40,7 @@ struct LoginView: View {
                     }
 
                     do {
-                        if let user = try userController.login(username: username, password: password) {
+                        if let user = try userViewModel.login(username: username, password: password) {
                             sessionController.login(user: user)
                             alertMessage = "Login successful! with username: \(user.username)"
                             
@@ -77,11 +77,11 @@ struct LoginView: View {
 
 #Preview {
     let container = try! ModelContainer(for: UserModel.self)
-    let userController = UserController(context: container.mainContext)
-    let session = SessionController()
+    let userViewModel = UserViewModel(context: container.mainContext)
+    let session = SessionViewModel()
 
     LoginView()
-        .environmentObject(userController)
+        .environmentObject(userViewModel)
         .environmentObject(session)
         .modelContainer(container)
 }

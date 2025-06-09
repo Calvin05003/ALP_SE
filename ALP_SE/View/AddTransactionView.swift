@@ -9,8 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct AddTransactionView: View {
-    @EnvironmentObject var session: SessionController
-    @EnvironmentObject var transactionController: TransactionController
+    @EnvironmentObject var session: SessionViewModel
+    @EnvironmentObject var transactionViewModel: TransactionViewModel
 
     @Query private var allCategories: [CategoryModel]
 
@@ -52,7 +52,7 @@ struct AddTransactionView: View {
         }
         .padding()
         .onAppear {
-            transactionController.insertDefaultCategoriesIfNeeded(currentCategories: allCategories)
+            transactionViewModel.insertDefaultCategoriesIfNeeded(currentCategories: allCategories)
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Error"), message: Text(errorMessage ?? ""), dismissButton: .default(Text("OK")))
@@ -67,7 +67,7 @@ struct AddTransactionView: View {
         }
 
         do {
-            try transactionController.addTransaction(
+            try transactionViewModel.addTransaction(
                 user: user,
                 category: selectedCategory,
                 amountText: amountText,
@@ -83,3 +83,4 @@ struct AddTransactionView: View {
         }
     }
 }
+

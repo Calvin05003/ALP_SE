@@ -11,9 +11,9 @@ import SwiftData
 struct SavingGoalsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var context
-    @EnvironmentObject var session: SessionController
-    @EnvironmentObject var goal: SavingGoalController
-    @EnvironmentObject var entry: SavingEntryController
+    @EnvironmentObject var session: SessionViewModel
+    @EnvironmentObject var goal: SavingGoalViewModel
+    @EnvironmentObject var entry: SavingEntryViewModel
     @Query(sort: \SavingGoalModel.dueDate) private var allGoals: [SavingGoalModel]
 
     @State private var title = ""

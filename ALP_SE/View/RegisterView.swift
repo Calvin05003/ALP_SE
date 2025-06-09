@@ -16,7 +16,7 @@ struct RegisterView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var navigateToLogin = false
-    @EnvironmentObject var userController: UserController
+    @EnvironmentObject var userViewModel: UserViewModel
 
     var body: some View {
         NavigationView {   // <-- Wrap content in NavigationView
@@ -44,7 +44,7 @@ struct RegisterView: View {
                         showAlert = true
                     } else {
                         do {
-                            let success = try userController.register(username: username, password: password)
+                            let success = try userViewModel.register(username: username, password: password)
                             if success {
                                 alertMessage = "Registration successful!"
                                 showAlert = true
@@ -82,9 +82,9 @@ struct RegisterView: View {
     // Prepare a ModelContainer for UserModel
     let container = try! ModelContainer(for: UserModel.self)
     // Create UserController with container's context
-    let userController = UserController(context: container.mainContext)
+    let userViewModel = UserViewModel(context: container.mainContext)
 
     RegisterView()
-        .environmentObject(userController)
+        .environmentObject(userViewModel)
         .modelContainer(container)
 }

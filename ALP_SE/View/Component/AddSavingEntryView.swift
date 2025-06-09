@@ -8,8 +8,8 @@ import SwiftUI
 
 struct AddSavingEntryView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var entry: SavingEntryController
-    @EnvironmentObject var session: SessionController
+    @EnvironmentObject var entry: SavingEntryViewModel
+    @EnvironmentObject var session: SessionViewModel
     let goal: SavingGoalModel
     @State private var amountText: String = ""
 

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-class SavingEntryController: ObservableObject {
+class SavingEntryViewModel: ObservableObject {
     private var context: ModelContext
     
     init(context: ModelContext) {

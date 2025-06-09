@@ -7,7 +7,7 @@
 import SwiftUI
 import SwiftData
 struct HomeView: View {
-    @EnvironmentObject var session: SessionController
+    @EnvironmentObject var session: SessionViewModel
     @Environment(\.modelContext) private var context
     @State private var isAddingBalance = false
     @State private var newBalanceText: String = ""
@@ -73,7 +73,7 @@ struct HomeView: View {
                 .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
                 NavigationLink {
                     AddTransactionView()
-                        .environmentObject(TransactionController(context: context))
+                        .environmentObject(TransactionViewModel(context: context))
                 } label: {
                     Text("➕ Add Transaction")
                         .fontWeight(.medium)
@@ -138,7 +138,7 @@ struct HomeView: View {
         password: "123",
         balance: 0.0
     )
-    let dummySession = SessionController()
+    let dummySession = SessionViewModel()
     dummySession.login(user: dummyUser)
     return HomeView()
         .environmentObject(dummySession)

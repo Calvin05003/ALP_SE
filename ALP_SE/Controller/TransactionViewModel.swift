@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @MainActor
-class TransactionController: ObservableObject {
+class TransactionViewModel: ObservableObject {
     private var context: ModelContext
 
     init(context: ModelContext) {
