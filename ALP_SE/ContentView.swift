@@ -11,10 +11,10 @@ struct ContentView: View {
     //buat navbar disini
     var body: some View {
         VStack {
-            Image(systemName: "globe")
+            Image(systemName: "globes")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Hello")
         }
         .padding()
     }
